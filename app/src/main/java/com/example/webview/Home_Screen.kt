@@ -1,5 +1,6 @@
 package com.example.webview
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,30 +25,13 @@ import com.example.webview.ui.theme.WebViewTheme
 
 @Composable
 fun HomeScreen(){
-    var url by remember { mutableStateOf("https://www.instagram.com/direct/inbox") }
+    val url = remember { mutableStateOf("https://www.instagram.com/?variant=following") }
+    val isNavVisible = remember { mutableStateOf(true) }
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter){
-        WebView(url)
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .background(Color.Transparent)
-                .pointerInput(Unit){},
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Button(onClick = { url="https://www.instagram.com/?variant=following" }) {
-                Icons.Filled.Home
-            }
-            Button(onClick = { url = "https://www.instagram.com/direct/inbox" }) {
-                Icons.Filled.Email
-            }
+        WebView(url.value,isNavVisible)
+        if(isNavVisible.value){
+            BottomBar(url = url)
         }
-
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomePreview(){
-    WebViewTheme {
-        HomeScreen()
-    }
-}
