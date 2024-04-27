@@ -18,7 +18,7 @@ fun NavBar(){
     ) {
         // WebView Here
         Row(
-            modifier = Modifier.fillMaxWidth().
+            modifier = Modifier.fillMaxWidth()
         ){
             Button(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")
