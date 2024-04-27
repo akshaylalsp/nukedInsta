@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 fun WebView() {
 
     // ... (rest of the code)
-    val mUrl = "https://instagram.com/direct/t/"
+    val mUrl = "https://instagram.com"
     AndroidView(factory = {
         val webView = WebView(it).apply {
             layoutParams = ViewGroup.LayoutParams(
