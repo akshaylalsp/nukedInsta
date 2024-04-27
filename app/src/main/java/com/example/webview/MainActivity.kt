@@ -1,5 +1,6 @@
 package com.example.webview
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebView() {
 
@@ -52,27 +54,41 @@ fun WebView() {
 
             // Set a WebViewClient to handle link clicks, loading progress, and errors
             webViewClient = object : WebViewClient() {
+
+                val jsCode = """
+                                setTimeout(function() {
+                                    var elements = document.querySelectorAll('$blocklist');
+                                    elements.forEach(function(element) {
+                                        element.style.display = 'none'; // Hide elements with _aacg class
+                                    });
+                            }, 1000); // Delay by 1 second
+                        """.trimIndent()
+
+
+                @Deprecated("Deprecated in Java", ReplaceWith("false"))
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                     // Handle link clicks here (optional)
                     // ...
-
-                    // Return false to keep links within the app
+                    view.evaluateJavascript(jsCode, null)
                     return false
                 }
 
                 override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
+                    view.evaluateJavascript(jsCode, null)
                     // Show a loading indicator while page loads
                     // (implement your loading indicator UI here)
                 }
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
+                    view.evaluateJavascript(jsCode, null)
                     // Hide loading indicator after page finishes loading
                 }
 
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                     super.onReceivedError(view, request, error)
+                    view.reload()
                     // Handle loading errors (display an error message or retry)
                     // (implement your error handling logic here)
                 }
