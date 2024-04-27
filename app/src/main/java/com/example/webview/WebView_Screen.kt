@@ -1,10 +1,14 @@
 package com.example.webview
 
 import android.annotation.SuppressLint
+import android.health.connect.datatypes.units.Length
+import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -16,7 +20,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebView(mUrl:String) {
+fun WebView(mUrl:String,isNavVisible:MutableState<Boolean>) {
 
     AndroidView(factory = {
         val webView = WebView(it).apply {
@@ -41,6 +45,7 @@ fun WebView(mUrl:String) {
 
                 override fun onLoadResource(view: WebView?, url: String?) {
                     super.onLoadResource(view, url)
+
                     view?.evaluateJavascript(jsCode, null)
                 }
 
@@ -49,12 +54,21 @@ fun WebView(mUrl:String) {
                     request: WebResourceRequest?
                 ): Boolean {
                     view?.evaluateJavascript(jsCode, null)
+//                    val currentUrl = request?.url?.toString()
+//                    Toast.makeText(context,currentUrl,LENGTH_SHORT).show()
                     return super.shouldOverrideUrlLoading(view, request)  // Let WebView handle the URL change
                 }
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
                     view.evaluateJavascript(jsCode, null)
+//                    isNavVisible.value = false
+                    var result = url == "https://www.instagram.com/direct/inbox/"
+                    if(url.contains("direct",ignoreCase = true)){
+                        isNavVisible.value = false
+                    }
+                    Toast.makeText(context,result.toString(), LENGTH_SHORT).show()
+                    Log.i("inbox",url+"https://www.instagram.com/direct/inbox")
                 }
 
             }
